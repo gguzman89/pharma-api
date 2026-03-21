@@ -1,11 +1,14 @@
 import os
 from fastapi import FastAPI
 from dotenv import load_dotenv
-from app.models import Paciente
+from app.routes import pacientes
 
 load_dotenv()
 
 app = FastAPI(title=os.getenv("APP_NAME", "Pharma API"))
+
+# routes
+app.include_router(pacientes.router)
 
 
 @app.get("/")
@@ -19,9 +22,3 @@ def get_config():
         "app_name": os.getenv("APP_NAME"),
         "debug_mode": os.getenv("DEBUG") == "True",
     }
-
-
-@app.post("/pacientes/ingreso")
-async def crear_paciente(paciente: Paciente):
-    # aqui Pydantic ya valido todo
-    return {"status": "success", "data": paciente}
