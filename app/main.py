@@ -1,5 +1,6 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from app.routes import pacientes
 
@@ -9,6 +10,14 @@ app = FastAPI(title=os.getenv("APP_NAME", "Pharma API"))
 
 # routes
 app.include_router(pacientes.router)
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"message": "Ocurrio algo inesperado", "detail": str(exc)},
+    )
 
 
 @app.get("/")
