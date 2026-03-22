@@ -15,3 +15,9 @@ def test_crear_paciente_valido():
     response = client.post("/pacientes/ingreso", json=payload)
     assert response.status_code == 200
     assert response.json()["data"]["nombre"] == "Gabriel"
+
+
+def test_listar_pacientes_empty():
+    response = client.get("/pacientes/")
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
