@@ -1,11 +1,8 @@
-import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
+from app.core.config import settings
 from app.routes import pacientes
-
-load_dotenv()
 
 """origins = [
     "http://localhost:3000",
@@ -14,12 +11,12 @@ load_dotenv()
     "https://www.redautoshop.com.ar",
 ] """
 
-app = FastAPI(title=os.getenv("APP_NAME", "Pharma API"))
+app = FastAPI(title=settings.APP_NAME)
 
 # cors
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("ALLOWED_ORIGINS").split(","),
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH"],
     allow_headers=["Content-Type", "Authorization"],
@@ -45,6 +42,6 @@ def read_root():
 @app.get("/config")
 def get_config():
     return {
-        "app_name": os.getenv("APP_NAME"),
-        "debug_mode": os.getenv("DEBUG") == "True",
+        "app_name": settings.APP_NAME,
+        "debug_mode": settings.DEBUG,
     }
